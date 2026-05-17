@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api";
 import { 
   ShoppingBag, 
   Plus, 
@@ -79,7 +79,7 @@ export default function Home() {
 
   // LOAD PRODUCTS FROM DATABASE
   const loadProducts = () => {
-    axios.get("/api/products")
+    api.get("/api/products")
       .then(res => {
         setProducts(Array.isArray(res.data) ? res.data : []);
       })
@@ -107,7 +107,7 @@ export default function Home() {
       // Fallback placeholder image if none provided
       const finalImage = form.image.trim() || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=600";
       
-      await axios.post("/api/products", {
+      await api.post("/api/products", {
         name: form.name,
         price: Number(form.price),
         description: form.description,
@@ -128,7 +128,7 @@ export default function Home() {
   const buyProduct = async (id) => {
     setBuyingId(id);
     try {
-      const res = await axios.post(`/api/orders/buy/${id}`);
+      const res = await api.post(`/api/orders/buy/${id}`);
       
       // Flash success state for button
       setSuccessBuyId(id);
@@ -157,7 +157,7 @@ export default function Home() {
     setIsSeeding(true);
     try {
       for (const product of SAMPLE_PRODUCTS) {
-        await axios.post("/api/products", product);
+        await api.post("/api/products", product);
       }
       loadProducts();
     } catch (err) {
